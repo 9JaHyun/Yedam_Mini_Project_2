@@ -16,7 +16,12 @@
   * 여석 조정 가능(ex: 코로나 악화로 인한 여석 줄이기)
 
 ### 고객
-#### 고객 정보
+#### 고객 정보Firm
+member
+movie
+reservation
+cinema
+
   * 아이디 + 비밀번호
   * 영화 예매 횟수에 따른 등급 부여 (메가박스의 정책을 참조)
 ![memberLevel_Policy.png](image/memberLevel_Policy.png)
