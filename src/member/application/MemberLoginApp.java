@@ -9,7 +9,7 @@ public class MemberLoginApp {
     private final MemberLoginService memberLoginService = new MemberLoginService(new MemberRepository());
     private final MemberApp managerApp = new MemberApp();
 
-    public void run() {
+    public void run() throws Exception {
         Scanner sc = new Scanner(System.in);
         boolean runApp = true;
         while(runApp) {
@@ -24,8 +24,7 @@ public class MemberLoginApp {
 
                 case 2: {
                     signUp(sc);
-                    System.out.println("회원가입이 성공적으로 이루어졌습니다. 로그인페이지로 이동합니다.");
-                    signIn(sc);
+                    System.out.println("회원가입이 성공적으로 이루어졌습니다.");
                     break;
                 }
 

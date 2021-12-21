@@ -99,7 +99,7 @@ public class ReservationApp {
                     .append("\n");
         }
         System.out.println(sb);
-
+        System.out.println();
     }
 
     private int[] selectAudienceCount() {

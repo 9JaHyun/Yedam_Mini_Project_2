@@ -1,5 +1,6 @@
 package member.application;
 
+import boxoffice.Application.BoxOfficeApp;
 import member.Repository.MemberRepository;
 import member.domain.Member;
 import reservation.application.ReservationApp;
@@ -11,10 +12,11 @@ import java.util.Scanner;
 public class MemberApp {
     private final MemberService managerService = new MemberService(new MemberRepository());
     ReservationApp reservationApp = new ReservationApp();
+    BoxOfficeApp boxOfficeApp = new BoxOfficeApp();
     ReservationService reservationService = new ReservationService(new ReservationRepository());
     Scanner sc = new Scanner(System.in);
 
-    public void run(Member member) {
+    public void run(Member member) throws Exception {
         boolean runApp = true;
         while(runApp) {
             renderFirstMenu(member);
@@ -32,7 +34,7 @@ public class MemberApp {
                 }
                 // 박스오피스
                 case 3: {
-                    System.out.println("로그아웃.");
+                    boxOfficeApp.run();
                     break;
                 }
                 // 비밀번호 변경

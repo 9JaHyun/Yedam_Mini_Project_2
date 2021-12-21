@@ -4,13 +4,14 @@ import reservation.application.ReservationApp;
 import share.init.*;
 
 public class Client {
-    public static void main(String[] args) {
-//        initAll();
+    public static void main(String[] args) throws Exception {
+        initAll();
         MemberLoginApp start = new MemberLoginApp();
 
         start.run();
-        ReservationApp reservationApp = new ReservationApp();
+
 //        Member member = new Member(5L, "test1", "password1", MemberLevel.VVIP);
+//        ReservationApp reservationApp = new ReservationApp();
 //        reservationApp.run(member);
     }
 
