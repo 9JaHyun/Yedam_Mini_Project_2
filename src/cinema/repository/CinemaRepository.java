@@ -18,10 +18,10 @@ public class CinemaRepository {
 
     public void insert(Cinema cinema) {
         jdbcTemplate(con -> {
-            String insertQuery = "insert into CINEMA values(HIBERNATE_SEQUENCE.NEXTVAL, ?, ?)";
+            String insertQuery = "insert into CINEMA (CINEMA_ID, REGION, LOCATION) values(HIBERNATE_SEQUENCE.NEXTVAL, ?, ?)";
             PreparedStatement ps = con.prepareStatement(insertQuery);
-            ps.setString(1, cinema.getLocation());
-            ps.setString(2, cinema.getRegion());
+            ps.setString(1, cinema.getRegion());
+            ps.setString(2, cinema.getLocation());
             return ps;
         });
     }
@@ -32,6 +32,24 @@ public class CinemaRepository {
         try (Connection con = dataSource.connect();
              PreparedStatement ps = con.prepareStatement(selectQuery)){
             ps.setLong(1, cinemaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    cinema = Optional.of(cinemaMapper(rs));
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cinema;
+    }
+
+    public Optional<Cinema> selectByRegionAndLocation(String region, String location) {
+        Optional<Cinema> cinema = Optional.empty();
+        String selectQuery = "select * from CINEMA where REGION = ? AND LOCATION = ?";
+        try (Connection con = dataSource.connect();
+             PreparedStatement ps = con.prepareStatement(selectQuery)){
+            ps.setString(1, region);
+            ps.setString(2, location);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     cinema = Optional.of(cinemaMapper(rs));
@@ -88,12 +106,12 @@ public class CinemaRepository {
         }
     }
 
-    // cinema_id, location, region, theater_id
+    // cinema_id, location, region
     private Cinema cinemaMapper(ResultSet rs) throws SQLException {
         Long cinemaId = rs.getLong(1);
         String location = rs.getString(2);
         String region = rs.getString(3);
 
-        return new Cinema(cinemaId, location, region);
+        return new Cinema(cinemaId, region, location);
     }
 }

@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Cinema {
     private Long id;
-    private String location;
     private String region;
+    private String location;
     private List<Theater> theaters = new ArrayList<>();
 
-    public Cinema(Long cinemaId, String location, String region) {
+    public Cinema(Long cinemaId, String region, String location) {
         this.id = cinemaId;
-        this.location = location;
         this.region = region;
+        this.location = location;
     }
 
-    public Cinema(String location, String region) {
+    public Cinema(String region, String location) {
         this.location = location;
         this.region = region;
     }
@@ -61,9 +61,7 @@ public class Cinema {
 
     @Override
     public String toString() {
-        return "Cinema{" +
-                "지역: " + region + '\'' +
-                "지점: '" + location + '\'' +
-                '}';
+        return "영화관[지역: " + region +
+                " 지점: " + location + "]";
     }
 }

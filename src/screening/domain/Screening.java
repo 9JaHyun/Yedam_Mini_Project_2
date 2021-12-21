@@ -1,11 +1,13 @@
 package screening.domain;
 
+import cinema.domain.Theater;
 import member.domain.Member;
 import movie.domain.Movie;
 import reservation.domain.Reservation;
 import cinema.domain.Cinema;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Screening {
     private Long id;
@@ -13,21 +15,23 @@ public class Screening {
     private LocalDateTime startTime;
 
     private Movie movie;
-    private Cinema cinema;
+    private Theater theater;
 
-    public Screening(Long id, int seatAmount, LocalDateTime startTime, Movie movie, Cinema cinema) {
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH : mm");
+
+    public Screening(Long id, int seatAmount, LocalDateTime startTime, Movie movie, Theater theater) {
         this.id = id;
         this.seatAmount = seatAmount;
         this.startTime = startTime;
         this.movie = movie;
-        this.cinema = cinema;
+        this.theater = theater;
     }
 
-    public Screening(int seatAmount, LocalDateTime startTime, Movie movie, Cinema cinema) {
+    public Screening(int seatAmount, LocalDateTime startTime, Movie movie, Theater theater) {
         this.seatAmount = seatAmount;
         this.startTime = startTime;
         this.movie = movie;
-        this.cinema = cinema;
+        this.theater = theater;
     }
 
     public Reservation reserve(Member member, int audienceCount) {
@@ -70,20 +74,21 @@ public class Screening {
         this.movie = movie;
     }
 
-    public Cinema getCinema() {
-        return cinema;
+    public Theater getTheater() {
+        return theater;
     }
 
-    public void setCinema(Cinema cinema) {
-        this.cinema = cinema;
+    public void setTheater(Theater theater) {
+        this.theater = theater;
     }
 
     @Override
     public String toString() {
-        return "Screening{" +
-                "제목: " + movie.getTitle() +
-                ", 시작시간: " + startTime +
-                ", 상영위치: " + cinema.getTheaters().get(0) +
-                '}';
+
+        return "[영화제목: " + movie.getTitle() +
+                ", 상영시간: " + startTime.format(TIME_FORMAT) + " ~ " +
+                startTime.plus(movie.getRunningTime()).format(TIME_FORMAT) +
+                ", 상영위치: " + getTheater() +
+                ']';
     }
 }

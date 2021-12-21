@@ -48,7 +48,7 @@ public class MovieRepository {
         return movie;
     }
 
-    public Optional<Movie> selectByName(String title) {
+    public Optional<Movie> selectByTitle(String title) {
         Optional<Movie> movie = Optional.empty();
         String selectQuery = "select * from movie where title = ?";
         try (Connection con = dataSource.connect();

@@ -13,6 +13,7 @@ public class Reservation {
 
     public Reservation(Member member, Screening screening, int fee, int audienceCount) {
         this.member = member;
+        status = ReservationStatus.PAYMENT;
         this.screening = screening;
         this.fee = fee;
         this.audienceCount = audienceCount;

@@ -21,6 +21,10 @@ public class MovieService {
                 .orElseThrow(() -> new AssertionError("해당 id값의 영화를 찾을 수 없습니다. / id: " + movieId));
     }
 
+    public Movie findByName(String name) {
+        return movieRepository.selectByTitle(name).get();
+    }
+
     public List<Movie> findAll() {
         return movieRepository.selectAll();
     }

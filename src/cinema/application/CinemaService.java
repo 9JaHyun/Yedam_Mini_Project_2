@@ -17,26 +17,28 @@ public class CinemaService {
         cinemaRepository.insert(cinema);
     }
 
+    public Cinema findById(Long id) {
+        return cinemaRepository.selectById(id).orElseThrow(() -> new AssertionError("잘못된 cinema 정보입니다. id: " + id));
+    }
+
     public List<Cinema> findAll() {
         return cinemaRepository.selectAll();
     }
 
-    public List<Cinema> findCinemaByRegion(List<Cinema> cinemas, String region) {
-        return cinemas.stream()
-                .filter(cinema -> cinema.getRegion().equals(region))
-                .collect(Collectors.toList());
-    }
-
-    public Long findCinemaByLocation(List<Cinema> cinemas, String location) {
-        return cinemas.stream()
-                .filter(cinema -> cinema.getLocation().equals(location))
-                .map(Cinema::getId)
-                .findAny()
-                .orElseThrow(() -> new AssertionError("잘못된 위치정보입니다. / location: " + location));
+    public Cinema findCinemaByLocation(String region, String location) {
+        return cinemaRepository.selectByRegionAndLocation(region, location)
+                .orElseThrow(() -> new AssertionError("적절하지 않은 입력입니다. / region: " + region + " / location: " + location));
     }
 
     public void deleteAll() {
         cinemaRepository.deleteAll();
+    }
+
+
+    private List<Cinema> findCinemaByRegion(String region) {
+        return findAll().stream()
+                .filter(cinema -> cinema.getRegion().equals(region))
+                .collect(Collectors.toList());
     }
 
 }

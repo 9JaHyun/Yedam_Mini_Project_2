@@ -29,19 +29,33 @@ public class ScreeningService {
         return screeningRepository.selectAll();
     }
 
-    public List<Screening> selectByCinema(List<Screening> screenings, String title, Long cinemaId) {
-        return selectTitle(screenings, title).stream()
-                .filter(screening -> screening.getCinema().getId().equals(cinemaId))
+    public List<Screening> findByCinema(List<Screening> screenings, Long cinemaId) {
+        return screenings.stream()
+                .filter(screening -> screening.getTheater().getId().equals(cinemaId))
                 .collect(Collectors.toList());
     }
 
-    private List<Screening> selectTitle(List<Screening> screenings, String title) {
+
+    public void deleteAll() {
+        screeningRepository.deleteAll();
+    }
+
+    public List<Screening> findByTitle(List<Screening> screenings, String title) {
         return screenings.stream()
                 .filter(screening -> screening.getMovie().getTitle().equals(title))
                 .collect(Collectors.toList());
     }
 
-    public void deleteAll() {
-        screeningRepository.deleteAll();
+    public List<Screening> findCinemaByRegion(List<Screening> screenings, String region) {
+        return screenings.stream()
+                .filter(screening -> screening.getTheater().getCinema().getRegion().equals(region))
+                .collect(Collectors.toList());
+    }
+
+    public Long findCinemaByLocation(List<Screening> screenings, String location) {
+        return screenings.stream()
+                .filter(screening -> screening.getTheater().getCinema().getLocation().equals(location))
+                .map(screening -> screening.getTheater().getId())
+                .findFirst().get();
     }
 }

@@ -2,12 +2,16 @@ package member.application;
 
 import member.Repository.MemberRepository;
 import member.domain.Member;
+import reservation.application.ReservationApp;
+import reservation.application.ReservationService;
+import reservation.repository.ReservationRepository;
 
 import java.util.Scanner;
 
 public class MemberApp {
     private final MemberService managerService = new MemberService(new MemberRepository());
-
+    ReservationApp reservationApp = new ReservationApp();
+    ReservationService reservationService = new ReservationService(new ReservationRepository());
     Scanner sc = new Scanner(System.in);
 
     public void run(Member member) {
@@ -18,10 +22,12 @@ public class MemberApp {
             switch (firstMenuChoose) {
             	// 예매 하기
                 case 1:
+                    reservationApp.run(member);
                     break;
                 
                 // 예매 정보 확인
                 case 2: {
+                    renderReservations(member);
                     break;
                 }
                 // 박스오피스
@@ -78,5 +84,11 @@ public class MemberApp {
         System.out.print("비밀번호를 재입력하세요>> ");
         String password = sc.next();
         managerService.checkPassword(member, password);
+    }
+
+    private void renderReservations(Member member) {
+        System.out.println("============== " + member.getName() + "님의 예매 목록입니다. ==============");
+        System.out.println(reservationService.findByMember(member.getId()));
+        System.out.println("==========================================================");
     }
 }

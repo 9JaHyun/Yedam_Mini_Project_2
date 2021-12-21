@@ -37,21 +37,39 @@ public class ReservationRepository {
         });
     }
 
-    public Reservation selectById(Long reservationId) {
-        Reservation reservation = null;
+    public Optional<Reservation> selectById(Long reservationId) {
+        Optional<Reservation> reservation = Optional.empty();
         String selectQuery = "select * from RESERVATION where reservation_id = ?";
         try (Connection con = dataSource.connect();
              PreparedStatement ps = con.prepareStatement(selectQuery)){
             ps.setLong(1, reservationId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    reservation = reservationMapper(rs);
+                    reservation = Optional.of(reservationMapper(rs));
                 }
             }
         }catch (SQLException e) {
             e.printStackTrace();
         }
         return reservation;
+    }
+
+    public List<Reservation> selectByMemberId(Long memberId) {
+        List<Reservation> reservations = new ArrayList<>();
+        Reservation reservation = null;
+        String selectQuery = "select * from RESERVATION where MEMBER_ID = ?";
+        try (Connection con = dataSource.connect();
+             PreparedStatement ps = con.prepareStatement(selectQuery)){
+            ps.setLong(1, memberId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    reservations.add(reservationMapper(rs));
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservations;
     }
 
     private Reservation reservationMapper(ResultSet rs) throws SQLException {
