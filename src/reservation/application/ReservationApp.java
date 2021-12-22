@@ -59,12 +59,14 @@ public class ReservationApp {
             renderSeatByMap(tempSeatMap);
 
             System.out.print("확정하시겠습니까?(Y/N) >>");
-            if (checkYesOrNo(sc.next())) {
+            if (!checkYesOrNo(sc.next())) {
+                tempSeatMap = seatMap;
+            } else {
                 seatSelect = false;
             }
-            tempSeatMap = seatMap;
         }
         List<Seat> seats = reserveSeat(tempSeatMap);
+        System.out.println(seats);
 
         // 최종
         renderFinalReservation(finalScreening, audiences, seats);

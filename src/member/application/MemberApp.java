@@ -50,7 +50,8 @@ public class MemberApp {
                         System.out.println("잘못된 입력입니다.");
                         break;
                     }
-                    String s = renderDetail(reservationList.get(selectReservation - 1));
+                    Reservation reservation = reservationList.get(selectReservation - 1);
+                    String s = renderDetail(reservation);
                     if (s.equals("Y") || s.equals("y")) {
                         refund(reservation);
                     }
@@ -146,7 +147,7 @@ public class MemberApp {
         System.out.println();
         System.out.println("=====================================================================");
         if (reservation.getStatus() != ReservationStatus.WATCHING) {
-            System.out.println("환불하시겠습니까?(Y/N)>>");
+            System.out.print("환불하시겠습니까?(Y/N)>> ");
             return sc.next();
         }
         System.out.println("=====================================================================");
