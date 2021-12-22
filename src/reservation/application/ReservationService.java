@@ -43,5 +43,8 @@ public class ReservationService {
         reservationRepository.delete(id);
     }
 
+    public void refund(Reservation reservation) {
+        deleteById(reservation.getId());
+    }
 
 }

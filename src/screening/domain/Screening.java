@@ -30,7 +30,6 @@ public class Screening {
         this.movie = movie;
         this.theater = theater;
     }
-
     public Reservation reserve(Member member, int audienceCount) {
         return new Reservation(member, this, calculateFee(), audienceCount);
     }

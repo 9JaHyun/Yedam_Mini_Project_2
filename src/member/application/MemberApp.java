@@ -7,6 +7,7 @@ import reservation.application.ReservationApp;
 import reservation.application.ReservationService;
 import reservation.domain.Reservation;
 import reservation.domain.ReservationSeats;
+import reservation.domain.ReservationStatus;
 import reservation.repository.ReservationRepository;
 import reservation.repository.ReservationSeatsRepository;
 import share.App;
@@ -45,7 +46,15 @@ public class MemberApp {
                     if (selectReservation == 0) {
                         break;
                     }
-                    renderDetail(reservationList.get(selectReservation - 1));
+                    if (reservationList.get(selectReservation - 1) == null) {
+                        System.out.println("잘못된 입력입니다.");
+                        break;
+                    }
+                    String s = renderDetail(reservationList.get(selectReservation - 1));
+                    if (s.equals("Y") || s.equals("y")) {
+                        refund(reservation);
+                    }
+
                     break;
                 }
                 case 3: {
@@ -123,7 +132,7 @@ public class MemberApp {
         System.out.println("=====================================================================");
     }
 
-    private void renderDetail(Reservation reservation) {
+    private String renderDetail(Reservation reservation) {
         System.out.println();
         System.out.println("                             상세 정보.");
         System.out.println("=====================================================================");
@@ -136,5 +145,15 @@ public class MemberApp {
         seats1.iterator().forEachRemaining(seats -> System.out.print(seats + "   "));
         System.out.println();
         System.out.println("=====================================================================");
+        if (reservation.getStatus() != ReservationStatus.WATCHING) {
+            System.out.println("환불하시겠습니까?(Y/N)>>");
+            return sc.next();
+        }
+        System.out.println("=====================================================================");
+        return "";
+    }
+
+    private void refund(Reservation reservation) {
+        reservationService.refund(reservation);
     }
 }
