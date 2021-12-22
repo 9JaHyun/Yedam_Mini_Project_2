@@ -1,10 +1,8 @@
 package member.domain;
 
-import reservation.domain.Reservation;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Getter
 public class Member {
     private Long id;
     private String name;
@@ -32,27 +30,7 @@ public class Member {
         return new Member(id, name, password, memberLevel);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void changePassword(String password) {
         this.password = password;
-    }
-
-    public MemberLevel getMemberLevel() {
-        return memberLevel;
-    }
-
-    public void setMemberLevel(MemberLevel memberLevel) {
-        this.memberLevel = memberLevel;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

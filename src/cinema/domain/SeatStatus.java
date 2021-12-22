@@ -1,7 +1,8 @@
 package cinema.domain;
 
 public enum SeatStatus {
-    RESERVED,
     EMPTY,
+    RESERVED,
+    PICKED,
     REPAIR
 }

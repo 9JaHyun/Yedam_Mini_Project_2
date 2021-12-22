@@ -1,6 +1,5 @@
 package cinema.repository;
 
-import cinema.domain.Cinema;
 import cinema.domain.Seat;
 import cinema.domain.SeatRow;
 import cinema.domain.SeatStatus;
@@ -99,6 +98,17 @@ public class SeatRepository {
             e.printStackTrace();
         }
         return seats;
+    }
+
+    public void update(Seat seat) {
+        jdbcTemplate(con -> {
+            String updateQuery = "update SEAT set SEAT_STATUS = ? where SEAT_COL_NUMBER = ? AND ROW_ID = ?";
+            PreparedStatement ps = con.prepareStatement(updateQuery);
+            ps.setString(1, seat.getSeatStatus().toString());
+            ps.setLong(2, seat.getColumn());
+            ps.setLong(3, seat.getRow().getId());
+            return ps;
+        });
     }
 
     public void delete(Long seatId) {

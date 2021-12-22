@@ -1,19 +1,27 @@
 package movie.domain;
 
+import lombok.Getter;
+import movie.domain.discount.AmountDiscountPolicy;
+import movie.domain.discount.CultureDayCondition;
 import movie.domain.discount.DiscountPolicy;
+import movie.domain.discount.PeriodCondition;
 import movie.exception.InvalidScreeningException;
 import screening.domain.Screening;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
+@Getter
 public class Movie {
     private Long id;
     private String title;
     private Genre genre;
     private Duration runningTime;
     private int fee;
-    private DiscountPolicy discountPolicy;
+    private List<DiscountPolicy> discountPolicies = List.of(new AmountDiscountPolicy(5000, new CultureDayCondition())
+            , new AmountDiscountPolicy(1000, new PeriodCondition(LocalTime.of(8, 0))));
 
     public int getFee() {
         return fee;
@@ -39,31 +47,14 @@ public class Movie {
                 screening.getStartTime().isBefore(LocalDateTime.now())) {
             throw new InvalidScreeningException("예약할 수 없는 영화입니다.");
         }
+        for (DiscountPolicy discountPolicy : discountPolicies) {
+            fee -= (discountPolicy.calculateDiscountAmount(screening));
+        }
 
-        return fee - (discountPolicy.calculateDiscountAmount(screening));
+        return fee;
     }
 
     public LocalDateTime getEndTimeFrom(LocalDateTime whenStarted) {
         return whenStarted.plus(runningTime);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public Duration getRunningTime() {
-        return runningTime;
-    }
-
-    public DiscountPolicy getDiscountPolicy() {
-        return discountPolicy;
     }
 }

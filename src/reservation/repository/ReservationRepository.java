@@ -5,6 +5,7 @@ import member.domain.Member;
 import member.domain.MemberLevel;
 import reservation.domain.Reservation;
 import reservation.domain.ReservationStatus;
+import screening.repository.ScreeningRepository;
 import share.OracleData;
 import share.StatementMaker;
 
@@ -22,19 +23,24 @@ import java.util.Optional;
 // STATUS
 // MEMBER_ID
 public class ReservationRepository {
+    private static Long id = 1L;
     OracleData dataSource = OracleData.getInstance();
     MemberRepository memberRepository = new MemberRepository();
+    ScreeningRepository screeningRepository = new ScreeningRepository();
 
-    public void insert(Reservation reserve) {
+    public Long insert(Reservation reserve) {
         jdbcTemplate(con -> {
-            String insertQuery = "insert into RESERVATION values(HIBERNATE_SEQUENCE.NEXTVAL, ?, ?, ?, ?)";
+            String insertQuery = "insert into RESERVATION values(?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(insertQuery);
-            ps.setInt(1, reserve.getAudienceCount());
-            ps.setInt(2, reserve.getFee());
-            ps.setString(3, reserve.getStatus().toString());
-            ps.setLong(4, reserve.getMember().getId());
+            ps.setLong(1, id);
+            ps.setInt(2, reserve.getAudienceCount());
+            ps.setInt(3, reserve.getFee());
+            ps.setString(4, reserve.getStatus().toString());
+            ps.setLong(5, reserve.getMember().getId());
+            ps.setLong(6, reserve.getScreening().getId());
             return ps;
         });
+        return id++;
     }
 
     public Optional<Reservation> selectById(Long reservationId) {
@@ -78,9 +84,13 @@ public class ReservationRepository {
         int fee = rs.getInt(3);
         ReservationStatus status = ReservationStatus.valueOf(rs.getString(4));
         Long memberId = rs.getLong(5);
+        Long screeningId = rs.getLong(6);
 
 
-        return new Reservation(reservationId, status, memberRepository.selectById(memberId), fee, audienceCount);
+        return new Reservation(reservationId, status,
+                memberRepository.selectById(memberId),
+                screeningRepository.selectById(screeningId).get(),
+                fee, audienceCount);
     }
 
     public List<Reservation> selectAll() {

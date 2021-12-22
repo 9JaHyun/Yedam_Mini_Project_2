@@ -1,8 +1,13 @@
 package cinema.domain;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Optional;
 
+@Getter
+@Setter
 public class Theater {
     private Long id;
     private String name;
@@ -17,22 +22,6 @@ public class Theater {
     public Theater(String name, Cinema cinema) {
         this.name = name;
         this.cinema = cinema;
-    }
-
-    public Cinema getCinema() {
-        return cinema;
-    }
-
-    public void setCinema(Cinema cinema) {
-        this.cinema = cinema;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
 

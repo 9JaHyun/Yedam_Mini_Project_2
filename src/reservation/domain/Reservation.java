@@ -1,8 +1,13 @@
 package reservation.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import screening.domain.Screening;
 import member.domain.Member;
 
+import java.util.List;
+
+@Getter @Setter
 public class Reservation {
     private Long id;
     private ReservationStatus status;
@@ -10,68 +15,31 @@ public class Reservation {
     private Screening screening;
     private int fee;
     private int audienceCount;
+    private List<ReservationSeats> seats;
+
 
     public Reservation(Member member, Screening screening, int fee, int audienceCount) {
         this.member = member;
         status = ReservationStatus.PAYMENT;
         this.screening = screening;
-        this.fee = fee;
+        this.fee = fee * audienceCount;
         this.audienceCount = audienceCount;
     }
 
-    public Reservation(Long id, ReservationStatus status, Member member, int fee, int audienceCount) {
+    public Reservation(Long id, ReservationStatus status, Member member, Screening screening, int fee, int audienceCount) {
         this.id = id;
         this.status = status;
         this.member = member;
-        this.fee = fee;
-        this.audienceCount = audienceCount;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public ReservationStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ReservationStatus status) {
-        this.status = status;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Screening getScreening() {
-        return screening;
-    }
-
-    public void setScreening(Screening screening) {
         this.screening = screening;
-    }
-
-    public int getFee() {
-        return fee;
-    }
-
-    public void setFee(int fee) {
         this.fee = fee;
-    }
-
-    public int getAudienceCount() {
-        return audienceCount;
-    }
-
-    public void setAudienceCount(int audienceCount) {
         this.audienceCount = audienceCount;
+    }
+
+    @Override
+    public String toString() {
+        return screening +
+                ",  결제 금액: " + fee + "원" +
+                ",  인원: " + audienceCount + "명" +
+                ",  상태: " + status;
     }
 }

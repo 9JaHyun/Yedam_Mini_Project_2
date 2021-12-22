@@ -11,5 +11,6 @@
     <orderEntry type="library" name="kobis-opcl-rest-v1.0" level="project" />
     <orderEntry type="library" name="jackson-core-2.12.5-javadoc" level="project" />
     <orderEntry type="library" name="lombok" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.13.0-rc1" level="project" />
   </component>
 </module>

@@ -5,47 +5,61 @@ import member.Repository.MemberRepository;
 import member.domain.Member;
 import reservation.application.ReservationApp;
 import reservation.application.ReservationService;
+import reservation.domain.Reservation;
+import reservation.domain.ReservationSeats;
 import reservation.repository.ReservationRepository;
+import reservation.repository.ReservationSeatsRepository;
+import share.App;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MemberApp {
     private final MemberService managerService = new MemberService(new MemberRepository());
-    ReservationApp reservationApp = new ReservationApp();
-    BoxOfficeApp boxOfficeApp = new BoxOfficeApp();
-    ReservationService reservationService = new ReservationService(new ReservationRepository());
+    private final ReservationService reservationService =
+            new ReservationService(new ReservationRepository(), new ReservationSeatsRepository());
+    private ReservationApp reservationApp = new ReservationApp();
+    private App app;
+
+
+    private void setApp(App app) {
+        this.app = app;
+    }
+
     Scanner sc = new Scanner(System.in);
 
     public void run(Member member) throws Exception {
         boolean runApp = true;
-        while(runApp) {
+        while (runApp) {
             renderFirstMenu(member);
             int firstMenuChoose = sc.nextInt();
             switch (firstMenuChoose) {
-            	// 예매 하기
                 case 1:
                     reservationApp.run(member);
                     break;
-                
-                // 예매 정보 확인
                 case 2: {
-                    renderReservations(member);
+                    List<Reservation> reservationList = reservationService.findByMember(member.getId());
+                    renderReservations(reservationList);
+                    System.out.print("상세보기를 원하시면 번호를 입력하세요(나가기: 0)>> ");
+                    int selectReservation = sc.nextInt();
+                    if (selectReservation == 0) {
+                        break;
+                    }
+                    renderDetail(reservationList.get(selectReservation - 1));
                     break;
                 }
-                // 박스오피스
                 case 3: {
-                    boxOfficeApp.run();
+                    setApp(new BoxOfficeApp());
+                    app.run();
                     break;
                 }
-                // 비밀번호 변경
                 case 4: {
-                    System.out.print("비밀번호를 변경하려면 Y(y)를 입력하세요>> ");
-                    if(checkYesOrNo(sc.next())) {
+                    renderPasswordChangePage();
+                    if (checkYesOrNo(sc.next())) {
                         changePassword(member);
                     }
                     break;
                 }
-                // 로그아웃
                 case 5: {
                     System.out.println("로그아웃.");
                     runApp = false;
@@ -59,11 +73,19 @@ public class MemberApp {
         }
     }
 
+    private void renderPasswordChangePage() {
+        System.out.println("                           비밀번호 변경");
+        System.out.println("=====================================================================");
+        System.out.print("비밀번호를 변경하려면 Y(y)를 입력하세요>> ");
+    }
+
     private void renderFirstMenu(Member member) {
+        System.out.println("                            Yedam 영화관");
+        System.out.println("=====================================================================");
+        System.out.println("                                           " + member.getName() + "님 안녕하세요");
         System.out.println();
-        System.out.println("=========== " + member.getName() + "님 안녕하세요 ===========");
         System.out.println("1.예매 하기 | 2.예매 정보 확인 | 3.박스오피스 | 4.비밀번호 변경 | 5.로그아웃");
-        System.out.println("==================================================");
+        System.out.println("=====================================================================");
         System.out.print("입력>> ");
     }
 
@@ -88,9 +110,31 @@ public class MemberApp {
         managerService.checkPassword(member, password);
     }
 
-    private void renderReservations(Member member) {
-        System.out.println("============== " + member.getName() + "님의 예매 목록입니다. ==============");
-        System.out.println(reservationService.findByMember(member.getId()));
-        System.out.println("==========================================================");
+    private void renderReservations(List<Reservation> reservationList) {
+        System.out.println();
+        System.out.println("                          예매 목록.");
+        System.out.println("=====================================================================");
+        int i = 1;
+        for (Reservation reservation : reservationList) {
+            System.out.println(i + ".   " + reservation.toString());
+            i++;
+        }
+        System.out.println();
+        System.out.println("=====================================================================");
+    }
+
+    private void renderDetail(Reservation reservation) {
+        System.out.println();
+        System.out.println("                             상세 정보.");
+        System.out.println("=====================================================================");
+        System.out.println("영화정보: " + reservation.getScreening());
+        System.out.println("인   원: 일반 - " + reservation.getAudienceCount());
+//        System.out.println("좌   석: " + reservation.get);
+        System.out.println("결제금액: " + reservation.getFee() + "원");
+        System.out.print("좌   석: ");
+        List<ReservationSeats> seats1 = reservationService.findSeats(reservation.getId());
+        seats1.iterator().forEachRemaining(seats -> System.out.print(seats + "   "));
+        System.out.println();
+        System.out.println("=====================================================================");
     }
 }

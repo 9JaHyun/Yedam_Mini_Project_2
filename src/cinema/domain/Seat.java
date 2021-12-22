@@ -1,5 +1,10 @@
 package cinema.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Seat {
     private Long id;
     private int column;
@@ -19,35 +24,22 @@ public class Seat {
         this.row = row;
     }
 
-    public Long getId() {
-        return id;
+    public String printSeatStatus() {
+        switch (seatStatus) {
+            case EMPTY:
+                return column + "□ ";
+            case PICKED:
+                return column + "● ";
+            case RESERVED:
+                return column + "■ ";
+            case REPAIR:
+                return column + "X ";
+            default:
+                return column + "? ";
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public SeatStatus getSeatStatus() {
-        return seatStatus;
-    }
-
-    public void setSeatStatus(SeatStatus seatStatus) {
-        this.seatStatus = seatStatus;
-    }
-
-    public SeatRow getRow() {
-        return row;
-    }
-
-    public void setRow(SeatRow row) {
-        this.row = row;
+    public String toString() {
+        return row.getRowName() + column;
     }
 }

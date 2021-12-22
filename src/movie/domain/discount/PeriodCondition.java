@@ -15,7 +15,4 @@ public class PeriodCondition implements DiscountCondition{
     public boolean isSatisfiedBy(Screening screening) {
         return startTime.compareTo(screening.getStartTime().toLocalTime()) <= 0;
     }
-
-
-
 }

@@ -3,38 +3,37 @@ package boxoffice.Application;
 import boxoffice.boxofficelist.BoxOfficeService;
 import boxoffice.boxofficelist.DailyBoxOfficeListDto;
 import boxoffice.boxofficelist.WeekBoxOfficeListDto;
+import share.App;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
-public class BoxOfficeApp {
-    BoxOfficeService boxOfficeService = new BoxOfficeService();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyymmdd");
-    SimpleDateFormat dateTimeRenderFormatter = new SimpleDateFormat("yyyy년 mm월 dd일");
-    SimpleDateFormat weekTimeRenderFormatter = new SimpleDateFormat("yyyy년 mm월 W째주");
-    Calendar cal = Calendar.getInstance();
+public class BoxOfficeApp implements App {
+    private final BoxOfficeService boxOfficeService = new BoxOfficeService();
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyymmdd");
+    private final DateTimeFormatter dateTimeRenderFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+    private final DateTimeFormatter weekTimeRenderFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 W째주");
+
     Scanner scanner = new Scanner(System.in);
 
     public void run() throws Exception {
         boolean runApp = true;
 
-        while (runApp){
+        while (runApp) {
             renderBoxOfficeMenu();
             int selectMenu = scanner.nextInt();
-            switch (selectMenu){
+            switch (selectMenu) {
                 case 1:
-                    System.out.println("                      " + dateTimeRenderFormatter.format(cal.getTime()) + "의 박스오피스 순위");
-                    System.out.println("======================================================================");
-                    List<DailyBoxOfficeListDto> dailyBoxOfficeListDtos = boxOfficeService.searchByToday(simpleDateFormat.format(cal.getTime()));
-                    renderTodayBoxOffice(dailyBoxOfficeListDtos);
+                    LocalDateTime today = LocalDateTime.now();
+                    renderToday(today);
                     break;
                 case 2:
-                    System.out.println("                    " + weekTimeRenderFormatter.format(cal.getTime()) + "의 박스오피스 순위");
-                    System.out.println("======================================================================");
-                    List<WeekBoxOfficeListDto> weekBoxOfficeListDtos = boxOfficeService.searchByWeek(simpleDateFormat.format(cal.getTime()));
-                    renderWeekBoxOffice(weekBoxOfficeListDtos);
+                    LocalDateTime thisWeek = LocalDateTime.now();
+                    renderThisWeek(thisWeek);
                     break;
                 case 3:
                     System.out.println("종료합니다.");
@@ -43,11 +42,38 @@ public class BoxOfficeApp {
         }
     }
 
+    private int selectSearchMenu() {
+        System.out.print("입력>> ");
+        return scanner.nextInt();
+    }
+
+    private void renderThisWeek(LocalDateTime localDateTime) throws Exception {
+        System.out.println("                 " + localDateTime.format(weekTimeRenderFormatter) + "의 박스오피스 순위");
+        System.out.println("======================================================================");
+        List<WeekBoxOfficeListDto> weekBoxOfficeListDtos = boxOfficeService.searchByWeek(localDateTime.format(dateTimeFormatter));
+        if (weekBoxOfficeListDtos.size() == 0) {
+            System.out.println("OOPS! 현재 통신이 원할하지 않습니다. 다시 시도해주세요");
+        } else{
+            renderWeekBoxOffice(weekBoxOfficeListDtos);
+        }
+    }
+
+    private void renderToday(LocalDateTime localDateTime) throws Exception {
+        System.out.println("                   " + localDateTime.format(dateTimeRenderFormatter) + "의 박스오피스 순위");
+        System.out.println("======================================================================");
+        List<DailyBoxOfficeListDto> dailyBoxOfficeListDtos = boxOfficeService.searchByToday(localDateTime.format(dateTimeFormatter));
+        if (dailyBoxOfficeListDtos.size() == 0) {
+            System.out.println("OOPS! 현재 통신이 원할하지 않습니다. 다시 시도해주세요");
+        } else {
+            renderTodayBoxOffice(dailyBoxOfficeListDtos);
+        }
+    }
+
     private void renderBoxOfficeMenu() {
-        System.out.println("        박스오피스");
-        System.out.println("===========================");
-        System.out.println("1. 오늘의 순위 | 2. 주간 순위");
-        System.out.println("===========================");
+        System.out.println("                박스오피스");
+        System.out.println("=======================================");
+        System.out.println("1. 오늘의 순위 | 2. 주간 순위 |  3. 종료");
+        System.out.println("=======================================");
         System.out.print("입력>> ");
     }
 
@@ -61,7 +87,7 @@ public class BoxOfficeApp {
                 (dailyBoxOfficeListDto.getRankOldAndNew().equals("NEW") ? " NEW " : "  -  "),
                 renderRankInten(dailyBoxOfficeListDto),
                 dailyBoxOfficeListDto.getMovieNm()));
-        System.out.println("============================================================");
+        System.out.println("======================================================================");
         DailyBoxOfficeListDto rank1 = list.get(0);
         System.out.printf("현재 박스오피스 1위 %s의 누적관객수는 %s명 입니다.", rank1.getMovieNm(), rank1.getAudiAcc());
         System.out.println();
@@ -77,9 +103,9 @@ public class BoxOfficeApp {
                 (weekBoxOfficeListDto.getRankOldAndNew().equals("NEW") ? " NEW " : "  -  "),
                 renderRankInten(weekBoxOfficeListDto),
                 weekBoxOfficeListDto.getMovieNm()));
-        System.out.println("============================================================");
+        System.out.println("======================================================================");
         WeekBoxOfficeListDto rank1 = list.get(0);
-        System.out.printf("현재 박스오피스 1위 %s의 누적관객수는 %s명 입니다.", rank1.getMovieNm(), rank1.getAudiAcc());
+        System.out.printf("이주 월요일 박스오피스 1위 %s의 누적관객수는 %s명 입니다.", rank1.getMovieNm(), rank1.getAudiAcc());
         System.out.println();
     }
 
@@ -101,12 +127,5 @@ public class BoxOfficeApp {
             return "-  ";
         }
         return "▼ " + Math.abs(num);
-    }
-
-    private String findFirstDayOfWeek() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return simpleDateFormat.format(cal.getTime());
-
     }
 }

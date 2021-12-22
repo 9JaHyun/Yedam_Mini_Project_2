@@ -27,27 +27,7 @@ public class SeatService {
         return seatRepository.selectByRowNumber(rowNum);
     }
 
-    public StringBuilder renderSeatRow(Long rowNum) {
-        StringBuilder sb = new StringBuilder();
-        List<Seat> rows = findByRowNum(rowNum);
-        String seatStatus;
-        for (Seat seat : rows) {
-            switch (seat.getSeatStatus()){
-                case EMPTY:
-                    seatStatus = seat.getColumn() + "□ ";
-                    break;
-                case RESERVED:
-                    seatStatus = seat.getColumn() + "■ ";
-                    break;
-                case REPAIR:
-                    seatStatus = seat.getColumn() + "X ";
-                    break;
-                default:
-                    seatStatus = seat.getColumn() + "? ";
-                    break;
-            }
-            sb.append(seatStatus);
-        }
-        return sb;
+    public void updateSeat(Seat seats) {
+        seatRepository.update(seats);
     }
 }

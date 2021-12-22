@@ -1,11 +1,13 @@
 
 import member.application.MemberLoginApp;
-import reservation.application.ReservationApp;
+import reservation.application.ReservationService;
+import reservation.repository.ReservationRepository;
+import reservation.repository.ReservationSeatsRepository;
 import share.init.*;
 
 public class Client {
     public static void main(String[] args) throws Exception {
-        initAll();
+//        initAll();
         MemberLoginApp start = new MemberLoginApp();
 
         start.run();

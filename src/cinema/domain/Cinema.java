@@ -1,8 +1,12 @@
 package cinema.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 public class Cinema {
     private Long id;
     private String region;
@@ -25,38 +29,6 @@ public class Cinema {
         this.location = location;
         this.region = region;
         this.theaters = theaters;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public List<Theater> getTheaters() {
-        return theaters;
-    }
-
-    public void setTheaters(List<Theater> theaters) {
-        this.theaters = theaters;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
     }
 
     @Override
