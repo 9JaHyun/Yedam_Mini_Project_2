@@ -68,7 +68,7 @@ public class MovieRepository {
     public List<Movie> selectAll() {
         List<Movie> members = new ArrayList<>();
         Movie movie = null;
-        String selectQuery = "select * from member";
+        String selectQuery = "select * from MOVIE";
         try (Connection con = dataSource.connect();
              PreparedStatement ps = con.prepareStatement(selectQuery)) {
             try (ResultSet rs = ps.executeQuery()) {

@@ -12,7 +12,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationSeatsRepository reservationSeatsRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationSeatsRepository reservationSeatsRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationSeatsRepository reservationSeatsRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationSeatsRepository = reservationSeatsRepository;
     }
@@ -43,8 +44,13 @@ public class ReservationService {
         reservationRepository.delete(id);
     }
 
+    public void deleteByMemberId(Long id) {
+        reservationRepository.deleteMemberId(id);
+    }
+
     public void refund(Reservation reservation) {
         deleteById(reservation.getId());
+        reservationSeatsRepository.deleteByReservationId(reservation.getId());
     }
 
 }

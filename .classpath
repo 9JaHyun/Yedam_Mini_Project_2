@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/kobis-opcl-rest-v1.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/lombok.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-annotations-2.13.0-rc1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-core-2.13.0-rc1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-databind-2.13.0-rc1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="out/production/Yedam_Mini_Project_2"/>
+</classpath>

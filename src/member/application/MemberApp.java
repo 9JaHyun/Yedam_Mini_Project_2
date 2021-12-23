@@ -20,6 +20,7 @@ public class MemberApp {
     private final ReservationService reservationService =
             new ReservationService(new ReservationRepository(), new ReservationSeatsRepository());
     private ReservationApp reservationApp = new ReservationApp();
+    BoxOfficeApp boxOfficeApp = new BoxOfficeApp();
     private App app;
 
 
@@ -59,8 +60,7 @@ public class MemberApp {
                     break;
                 }
                 case 3: {
-                    setApp(new BoxOfficeApp());
-                    app.run();
+                    boxOfficeApp.run();
                     break;
                 }
                 case 4: {
@@ -92,7 +92,7 @@ public class MemberApp {
     private void renderFirstMenu(Member member) {
         System.out.println("                            Yedam 영화관");
         System.out.println("=====================================================================");
-        System.out.println("                                           " + member.getName() + "님 안녕하세요");
+        System.out.println("                                   " + member.getName() + "님 안녕하세요" + "   (" + member.getMemberLevel() + " 등급)");
         System.out.println();
         System.out.println("1.예매 하기 | 2.예매 정보 확인 | 3.박스오피스 | 4.비밀번호 변경 | 5.로그아웃");
         System.out.println("=====================================================================");

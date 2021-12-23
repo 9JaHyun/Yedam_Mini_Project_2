@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class Screening {
     private Long id;
-    private int seatAmount;
     private LocalDateTime startTime;
 
     private Movie movie;
@@ -24,8 +23,7 @@ public class Screening {
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
-    public Screening(int seatAmount, LocalDateTime startTime, Movie movie, Theater theater) {
-        this.seatAmount = seatAmount;
+    public Screening(LocalDateTime startTime, Movie movie, Theater theater) {
         this.startTime = startTime;
         this.movie = movie;
         this.theater = theater;

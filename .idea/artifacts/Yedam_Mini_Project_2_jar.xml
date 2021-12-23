@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Yedam_Mini_Project_2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Yedam_Mini_Project_2_jar</output-path>
+    <root id="archive" name="Yedam_Mini_Project_2.jar">
+      <element id="module-output" name="Yedam_Mini_Project_2" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/jackson/jackson-annotations-2.13.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/jackson/jackson-core-2.13.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/kobis-opcl-rest-v1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/jackson/jackson-databind-2.13.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lombok.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../oraclexe/app/oracle/product/11.2.0/server/jdbc/lib/ojdbc6.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

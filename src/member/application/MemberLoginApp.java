@@ -1,7 +1,9 @@
 package member.application;
 
+import manager.ManagerApp;
 import member.Repository.MemberRepository;
 import member.domain.Member;
+import member.domain.MemberLevel;
 import share.App;
 
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 public class MemberLoginApp implements App {
     private final MemberLoginService memberLoginService = new MemberLoginService(new MemberRepository());
     private final MemberApp memberApp = new MemberApp();
+    private final ManagerApp managerApp = new ManagerApp();
 
     public void run() throws Exception {
         Scanner sc = new Scanner(System.in);
@@ -20,7 +23,11 @@ public class MemberLoginApp implements App {
                 case 1:
                     Member member = signIn(sc);
                     System.out.println("환영합니다. " + member.getName() + "님!!!");
-                    memberApp.run(member);
+                    if (member.getMemberLevel() == MemberLevel.ADMIN) {
+                        managerApp.run();
+                    } else {
+                        memberApp.run(member);
+                    }
                     break;
 
                 case 2: {

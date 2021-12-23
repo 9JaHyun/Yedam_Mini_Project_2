@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/Yedam_Mini_Project_2"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="ojdbc6" value="project"/>
+		<level name="kobis-opcl-rest-v1.0" value="project"/>
+		<level name="jackson-core-2.12.5-javadoc" value="project"/>
+		<level name="lombok" value="project"/>
+		<level name="jackson-annotations-2.13.0-rc1" value="project"/>
+	</levels>
+</component>

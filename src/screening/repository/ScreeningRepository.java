@@ -21,12 +21,11 @@ public class ScreeningRepository {
 
     public void insert(Screening screening) {
         jdbcTemplate(con -> {
-            String insertQuery = "insert into SCREENING (SCREENING_ID, SEAT_AMOUNT, START_TIME, MOVIE_ID, THEATER_ID) values(HIBERNATE_SEQUENCE.NEXTVAL, ?, ?, ?, ?)";
+            String insertQuery = "insert into SCREENING (SCREENING_ID, START_TIME, MOVIE_ID, THEATER_ID) values(HIBERNATE_SEQUENCE.NEXTVAL, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(insertQuery);
-            ps.setInt(1, screening.getSeatAmount());
-            ps.setTimestamp(2, Timestamp.valueOf(screening.getStartTime()));
-            ps.setLong(3, screening.getMovie().getId());
-            ps.setLong(4, screening.getTheater().getId());
+            ps.setTimestamp(1, Timestamp.valueOf(screening.getStartTime()));
+            ps.setLong(2, screening.getMovie().getId());
+            ps.setLong(3, screening.getTheater().getId());
             return ps;
         });
     }
@@ -119,12 +118,11 @@ public class ScreeningRepository {
     // MOVIE_ID
     private Screening screeningMapper(ResultSet rs) throws SQLException {
         Long screeningId = rs.getLong(1);
-        int seatAmount = rs.getInt(2);
-        LocalDateTime startTime = rs.getTimestamp(3).toLocalDateTime();
-        long movieId = rs.getLong(4);
-        long theaterId = rs.getLong(5);
+        LocalDateTime startTime = rs.getTimestamp(2).toLocalDateTime();
+        long movieId = rs.getLong(3);
+        long theaterId = rs.getLong(4);
 
-        return new Screening(screeningId, seatAmount, startTime
+        return new Screening(screeningId, startTime
                 , movieRepository.selectById(movieId).orElseThrow(() -> new AssertionError("해당 movie 정보가 없습니다. movie: " + movieId))
                 , theaterRepository.selectById(theaterId).orElseThrow(() -> new AssertionError("해당 상영관 정보가 없습니다. movie: " + theaterId)));
     }

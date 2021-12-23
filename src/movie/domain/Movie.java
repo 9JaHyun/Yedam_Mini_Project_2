@@ -57,4 +57,11 @@ public class Movie {
     public LocalDateTime getEndTimeFrom(LocalDateTime whenStarted) {
         return whenStarted.plus(runningTime);
     }
+
+    @Override
+    public String toString() {
+        return "타이틀: " + title +
+                ", 장르: " + genre +
+                ", 상영시간: " + runningTime.toMinutes() + "분";
+    }
 }

@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+// 고민 : Reservation이 한 트랜젝션안에 처리되야 하는 것은 맞지만 책임이 너무 비대하다.
 public class ReservationApp {
     ReservationService reservationService = new ReservationService(new ReservationRepository(),
                                                                 new ReservationSeatsRepository());
@@ -84,6 +85,14 @@ public class ReservationApp {
         if (!checkYesOrNo(yesOrNo)) {
             return;
         }
+        reserveFinalSeat(seats, reservation);
+
+        // 예약
+        System.out.println("결제 완료!");
+        System.out.println("회원페이지로 이동합니다.");
+    }
+
+    private void reserveFinalSeat(List<Seat> seats, Reservation reservation) {
         Long id = reservationService.save(reservation);
         reservation.setId(id);
         for (Seat seat : seats) {
@@ -92,12 +101,7 @@ public class ReservationApp {
             reservationSeatsService.saveSeat(reservationSeats);
             seatService.updateSeat(seat);
         }
-
-        // 예약
-        System.out.println("결제 완료!");
-        System.out.println("회원페이지로 이동합니다.");
     }
-
 
     private void renderFinalReservation(Screening finalScreening, int audienceCount, List<Seat> seats) {
         System.out.println("                             예매 정보");
@@ -113,15 +117,25 @@ public class ReservationApp {
     }
 
     private Map<String, List<Seat>> selectSeats(int audiences, Map<String, List<Seat>> seatMap) {
-        for (int i = audiences; i > 0; i--) {
+        while (audiences > 0) {
             String nextSeat = selectSeat();
             String[] seatInfo = splitRowAndCol(nextSeat);
             List<Seat> rowInfo = seatMap.get(seatInfo[0]);
-            rowInfo.get(Integer.parseInt(seatInfo[1]) - 1).setSeatStatus(SeatStatus.PICKED);
-            seatMap.replace(seatInfo[0], rowInfo);
+            if (canPick(rowInfo.get(Integer.parseInt(seatInfo[1]) - 1))) {
+                rowInfo.get(Integer.parseInt(seatInfo[1]) - 1).setSeatStatus(SeatStatus.PICKED);
+                seatMap.replace(seatInfo[0], rowInfo);
+                audiences--;
+            } else{
+                System.out.println("예약이 불가능한 좌석입니다.");
+            }
         }
 
         return seatMap;
+    }
+
+    private boolean canPick(Seat seat) {
+        return seat.getSeatStatus() != SeatStatus.RESERVED
+                && seat.getSeatStatus() != SeatStatus.REPAIR;
     }
 
     private String selectSeat() {
@@ -144,19 +158,20 @@ public class ReservationApp {
     }
 
     private void renderSeatByMap(Map<String, List<Seat>> pickSeatMap) {
-        sb.append("   ┌-----------------------------------------------┐\n")
+        StringBuilder sb1 = new StringBuilder();
+        sb1.append("   ┌-----------------------------------------------┐\n")
                 .append("   │           스          크          린           │\n")
                 .append("   └-----------------------------------------------┘\n");
         for (String s : pickSeatMap.keySet()) {
             List<Seat> seats = pickSeatMap.get(s);
-            sb.append(s).append("  ");
+            sb1.append(s).append("  ");
             for (Seat seat : seats) {
-                sb.append(seat.printSeatStatus())
+                sb1.append(seat.printSeatStatus())
                         .append("");
             }
-            sb.append("\n");
+            sb1.append("\n");
         }
-        System.out.println(sb);
+        System.out.println(sb1);
         System.out.println();
     }
 
@@ -210,22 +225,12 @@ public class ReservationApp {
         return true;
     }
 
+    // date
     private List<Screening> selectScreeningsByDate() {
         renderDate();
         LocalDate selectDate = selectDate();
         renderScreeningsByDate(selectDate);
         return screeningService.findByDate(selectDate);
-    }
-
-    private LocalDate selectDate() {
-        System.out.print("예매 일시를 선택하세요>> ");
-        int selectDate = sc.nextInt();
-        return LocalDate.now().plusDays(selectDate);
-    }
-
-    private Long selectCinema(List<Screening> screenings) {
-        List<Screening> screeningsByRegion = selectByRegion(screenings);
-        return selectByLocation(screeningsByRegion);
     }
 
     private void renderDate() {
@@ -237,6 +242,12 @@ public class ReservationApp {
         System.out.println("=====================================================================");
     }
 
+    private LocalDate selectDate() {
+        System.out.print("예매 일시를 선택하세요>> ");
+        int selectDate = sc.nextInt();
+        return LocalDate.now().plusDays(selectDate);
+    }
+
     private void renderScreeningsByDate(LocalDate localDate) {
         System.out.println("                             상영작 선택");
         System.out.println("=====================================================================");
@@ -246,6 +257,11 @@ public class ReservationApp {
                 .distinct()
                 .forEach(System.out::println);
         System.out.println("=====================================================================");
+    }
+
+    private Long selectCinema(List<Screening> screenings) {
+        List<Screening> screeningsByRegion = selectByRegion(screenings);
+        return selectByLocation(screeningsByRegion);
     }
 
     private String selectTitle() {

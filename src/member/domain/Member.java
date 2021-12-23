@@ -9,7 +9,7 @@ public class Member {
     private String password;
 
     private MemberLevel memberLevel;
-    private Member(String name, String password, MemberLevel memberLevel) {
+    public Member(String name, String password, MemberLevel memberLevel) {
         this.name = name;
         this.password = password;
         this.memberLevel = memberLevel;

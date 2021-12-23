@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="ojdbc6">
+    <archive path="C:/oraclexe/app/oracle/product/11.2.0/server/jdbc/lib/ojdbc6.jar" />
+  </library>
+  <library name="kobis-opcl-rest-v1.0">
+    <archive path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/kobis-opcl-rest-v1.0.jar" />
+  </library>
+  <library name="lombok">
+    <archive path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/lombok.jar" />
+  </library>
+  <library name="jackson-annotations-2.13.0-rc1">
+    <archive path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-annotations-2.13.0-rc1.jar" />
+    <archive path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-core-2.13.0-rc1.jar" />
+    <archive path="C:/dev/Yedam_Java_Study/Yedam_Mini_Project_2/jars/jackson/jackson-databind-2.13.0-rc1.jar" />
+  </library>
+</eclipse-userlibraries>
+

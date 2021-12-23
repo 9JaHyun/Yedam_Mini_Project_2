@@ -9,10 +9,7 @@ import screening.repository.ScreeningRepository;
 import share.OracleData;
 import share.StatementMaker;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,24 +20,31 @@ import java.util.Optional;
 // STATUS
 // MEMBER_ID
 public class ReservationRepository {
-    private static Long id = 1L;
     OracleData dataSource = OracleData.getInstance();
     MemberRepository memberRepository = new MemberRepository();
     ScreeningRepository screeningRepository = new ScreeningRepository();
 
     public Long insert(Reservation reserve) {
-        jdbcTemplate(con -> {
-            String insertQuery = "insert into RESERVATION values(?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = con.prepareStatement(insertQuery);
-            ps.setLong(1, id);
-            ps.setInt(2, reserve.getAudienceCount());
-            ps.setInt(3, reserve.getFee());
-            ps.setString(4, reserve.getStatus().toString());
-            ps.setLong(5, reserve.getMember().getId());
-            ps.setLong(6, reserve.getScreening().getId());
-            return ps;
-        });
-        return id++;
+        Long reservationId = 0L;
+        String insertQuery = "insert into RESERVATION values(RESERVATION_SEQ.nextval, ?, ?, ?, ?, ?)";
+        String generatedColumns[] = { "reservation_id" };
+        try (Connection con = dataSource.connect();
+             PreparedStatement ps = con.prepareStatement(insertQuery, generatedColumns)){
+            ps.setInt(1, reserve.getAudienceCount());
+            ps.setInt(2, reserve.getFee());
+            ps.setString(3, reserve.getStatus().toString());
+            ps.setLong(4, reserve.getMember().getId());
+            ps.setLong(5, reserve.getScreening().getId());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                while (rs.next()) {
+                    reservationId = rs.getLong(1);
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return reservationId;
     }
 
     public Optional<Reservation> selectById(Long reservationId) {
@@ -113,9 +117,18 @@ public class ReservationRepository {
 
     public void delete(Long reservationId) {
         jdbcTemplate(con -> {
-            String deleteQuery = "delete from RESERVATION where member_id = ?";
+            String deleteQuery = "delete from RESERVATION where RESERVATION_ID = ?";
             PreparedStatement ps = con.prepareStatement(deleteQuery);
             ps.setLong(1, reservationId);
+            return ps;
+        });
+    }
+
+    public void deleteMemberId(Long memberId) {
+        jdbcTemplate(con -> {
+            String deleteQuery = "delete from RESERVATION where MEMBER_ID = ?";
+            PreparedStatement ps = con.prepareStatement(deleteQuery);
+            ps.setLong(1, memberId);
             return ps;
         });
     }

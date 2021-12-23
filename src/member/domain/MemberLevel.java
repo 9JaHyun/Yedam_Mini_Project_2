@@ -4,7 +4,8 @@ public enum MemberLevel {
     MEMBER("MEMBER"),
     VIP("VIP"),
     VIP_PREMIUM("VIP_PREMIUM"),
-    VVIP("VVIP");
+    VVIP("VVIP"),
+    ADMIN("ADMIN");
 
     private String value;
 

@@ -3,24 +3,22 @@ package boxoffice.Application;
 import boxoffice.boxofficelist.BoxOfficeService;
 import boxoffice.boxofficelist.DailyBoxOfficeListDto;
 import boxoffice.boxofficelist.WeekBoxOfficeListDto;
-import share.App;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
-public class BoxOfficeApp implements App {
+public class BoxOfficeApp{
     private final BoxOfficeService boxOfficeService = new BoxOfficeService();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyymmdd");
     private final DateTimeFormatter dateTimeRenderFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
     private final DateTimeFormatter weekTimeRenderFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 W째주");
 
-    Scanner scanner = new Scanner(System.in);
+
 
     public void run() throws Exception {
+        Scanner scanner = new Scanner(System.in);
         boolean runApp = true;
 
         while (runApp) {
@@ -42,7 +40,7 @@ public class BoxOfficeApp implements App {
         }
     }
 
-    private int selectSearchMenu() {
+    private int selectSearchMenu(Scanner scanner) {
         System.out.print("입력>> ");
         return scanner.nextInt();
     }
